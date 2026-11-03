@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monitoring Arm Roll</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img src="assets/betric.webp" alt="Logo Betric">
+        <div>
+          <p>INFORMASI KONDISI ARM ROLL</p>
+          <h1>Monitoring Arm Roll</h1>
+        </div>
+      </div>
+      <div class="updated">
+        <span>Pembaruan terakhir</span>
+        <strong id="last-update">Memuat data...</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="map-panel" aria-label="Peta monitoring Arm Roll">
+      <div class="panel-heading">
+        <div>
+          <p>PETA LOKASI</p>
+          <h2>Persebaran Arm Roll</h2>
+        </div>
+        <span>Indikator diperbarui otomatis setiap 15 detik</span>
+      </div>
+      <div id="arm-roll-map" role="application" aria-label="Peta lokasi Arm Roll"></div>
+      <div class="legend" aria-label="Keterangan status">
+        <span><i class="full"></i>FULL</span>
+        <span><i class="not-full"></i>NOT FULL</span>
+        <span><i class="no-detection"></i>NO DETECTION</span>
+        <span><i class="offline"></i>OFFLINE</span>
+      </div>
+    </section>
+    <p id="map-message" class="map-message" role="status"></p>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" referrerpolicy="no-referrer"></script>
+  <script src="app.js"></script>
+</body>
+</html>
