@@ -1,108 +1,190 @@
-# Website Peta Public Vercel
+<div align="center">
+  <img src="assets/betric.webp" alt="Betric" width="112" />
 
-Folder ini adalah website peta public saja. Tidak membawa Flask, RTSP CCTV,
-RF-DETR, SQLite admin, video live, atau `SUPABASE_SECRET_KEY`.
+  # Smart Waste Public Map
 
-## Environment Variables Vercel
+  **Peta public untuk memantau kondisi Arm Roll secara transparan dan real-time berbasis status AI.**
 
-Di Vercel Project Settings → Environment Variables, isi:
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-111111?style=for-the-badge&logo=vercel)](https://smart-waste-public-map.vercel.app)
+  [![Supabase](https://img.shields.io/badge/Data-Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+  [![Leaflet](https://img.shields.io/badge/Map-Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com)
+
+  [Buka Peta Public](https://smart-waste-public-map.vercel.app) · [Login Admin](https://smart-waste-public-map.vercel.app/login.html)
+</div>
+
+---
+
+## Tentang Project
+
+**Smart Waste Public Map** adalah website peta untuk menampilkan persebaran dan kondisi Arm Roll. Website ini membaca indikator kondisi dari Supabase dan menampilkannya menggunakan Leaflet + OpenStreetMap.
+
+Project ini merupakan bagian public/cloud dari sistem Smart Waste Monitoring. Sistem AI, CCTV, RTSP, dan RF-DETR tetap berjalan pada perangkat lokal di TPS. Website ini tidak menyimpan maupun menampilkan credential CCTV.
+
+## Fitur
+
+### Public
+
+- Peta Arm Roll berbasis **Leaflet** dan **OpenStreetMap**.
+- Marker status yang mudah dibaca.
+- Popup nama Arm Roll, status, dan waktu pembaruan.
+- Pembaruan indikator otomatis setiap 15 detik.
+- Tidak ada akses ke kontrol CCTV, ROI, rekaman, atau dataset.
+
+### Admin Online
+
+- Login aman dengan **Supabase Auth**.
+- Tambah, edit, dan hapus lokasi Arm Roll.
+- Leaflet map picker untuk memilih koordinat.
+- Tombol GPS untuk mengambil lokasi perangkat.
+- Pengaturan Camera ID dan status aktif/nonaktif Arm Roll.
+- Status `FULL`, `NOT_FULL`, `NO_DETECTION`, dan `OFFLINE` bersifat **read-only**; berasal dari sistem AI lokal.
+
+## Indikator Status
+
+| Status | Warna | Makna |
+|---|---|---|
+| `FULL` | Merah | Arm Roll terdeteksi penuh. |
+| `NOT_FULL` | Hijau | Arm Roll belum penuh. |
+| `NO_DETECTION` | Abu-abu | Belum ada deteksi valid. |
+| `OFFLINE` | Abu gelap | Kamera atau sistem lokal tidak tersedia. |
+
+## Arsitektur
 
 ```text
-SUPABASE_URL=https://PROJECT_ID_KAMU.supabase.co
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_KEY_KAMU
+                    Public / Admin Online
+                              │
+                              ▼
+                  Vercel — Smart Waste Public Map
+                              │
+                              ▼
+                    Supabase — Data & Auth
+                              ▲
+                              │ status AI / metadata
+                              │
+                 PC TPS — Flask + SQLite Cache
+                              │
+             CCTV Dahua RTSP + RF-DETR + ROI
 ```
 
-### Cara mendapatkan nilainya
+> Vercel hanya menyajikan peta dan admin lokasi. RTSP, CCTV live, model AI, dan rekaman tetap berjalan di PC TPS.
 
-1. **SUPABASE_URL**
-   - Supabase → Settings → Data API.
-   - API URL biasanya tampil sebagai:
+## Teknologi
 
-   ```text
-   https://PROJECT_ID.supabase.co/rest/v1/
-   ```
+| Area | Teknologi |
+|---|---|
+| Frontend | HTML, CSS, JavaScript |
+| Peta | Leaflet + OpenStreetMap |
+| Hosting | Vercel |
+| Data & Auth | Supabase |
+| Backend lokal | Flask, OpenCV, RF-DETR |
 
-   - Simpan hanya bagian sebelum `/rest/v1/`:
+## Struktur Repository
 
-   ```text
-   https://PROJECT_ID.supabase.co
-   ```
-
-2. **SUPABASE_PUBLISHABLE_KEY**
-   - Supabase → Settings → API Keys → Publishable key.
-   - Salin key yang dimulai `sb_publishable_`.
-
-Jangan pakai atau simpan key `sb_secret_...` pada Vercel. Secret key hanya untuk
-file `.env` lokal di PC TPS, karena key tersebut dapat mengubah data Supabase.
+```text
+smart-waste-public-map/
+├── api/
+│   ├── arm-rolls.js          # API read-only untuk peta public
+│   └── supabase-config.js    # Konfigurasi Supabase untuk client admin
+├── assets/
+│   └── betric.webp
+├── admin.html                # CRUD Arm Roll online
+├── admin.js
+├── app.js                    # Logika peta public
+├── index.html                # Halaman public
+├── login.html                # Login Supabase Auth
+├── styles.css
+├── supabase-client.js
+└── vercel.json
+```
 
 ## Deploy ke Vercel
 
-1. Push repository project ke GitHub tanpa file `.env`.
-2. Buka [Vercel](https://vercel.com/) lalu pilih **Add New → Project**.
-3. Import repository GitHub project ini.
-4. Pada konfigurasi project, set **Root Directory** menjadi:
+1. Fork atau push repository ini ke GitHub.
+2. Buka [Vercel](https://vercel.com) → **Add New → Project**.
+3. Import repository GitHub.
+4. Pilih framework preset **Other**.
+5. Karena file website sudah berada di root repository, gunakan Root Directory:
+
+   ```text
+   ./
+   ```
+
+6. Tambahkan Environment Variables berikut di Vercel untuk **Production** dan **Preview**:
+
+   | Key | Value |
+   |---|---|
+   | `SUPABASE_URL` | `https://PROJECT_ID.supabase.co` |
+   | `SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` |
+
+7. Klik **Deploy**.
+
+Vercel memberi alamat gratis berakhiran `vercel.app`. Custom domain dapat ditambahkan kemudian bila diperlukan.
+
+## Setup Supabase
+
+### Database
+
+Jalankan schema berikut secara berurutan melalui **Supabase SQL Editor** pada project backend/local:
 
 ```text
-./
+supabase/schema.sql
+supabase/admin_schema.sql
 ```
 
-Repository ini sudah berisi langsung file website peta pada root.
+Schema menyiapkan:
 
-5. Tambahkan dua environment variable di atas untuk Production, Preview, dan
-   Development.
-6. Klik **Deploy**.
+- Tabel canonical `arm_rolls`.
+- View public `arm_roll_public`.
+- Row Level Security (RLS).
+- Akses read-only untuk public.
+- Akses CRUD metadata untuk user admin terautentikasi.
 
-Vercel memberi URL gratis seperti:
+### Authentication
+
+1. Buka **Authentication → Users** di Supabase.
+2. Buat akun email/password admin.
+3. Aktifkan **Auto confirm user**.
+4. Nonaktifkan public signup jika opsi tersedia.
+5. Pada **Authentication → URL Configuration**, isi:
+
+   ```text
+   Site URL: https://smart-waste-public-map.vercel.app
+   Redirect URL: https://smart-waste-public-map.vercel.app/login.html
+   ```
+
+Admin masuk melalui:
 
 ```text
-https://smart-waste-monitoring.vercel.app
+https://smart-waste-public-map.vercel.app/login.html
 ```
 
-Website membaca indikator Arm Roll dari Supabase. Status berubah ketika Flask
-lokal di PC TPS hidup dan berhasil melakukan sinkronisasi Supabase.
+## Data Sinkronisasi
 
-## Login dan Kelola Arm Roll Online
+Supabase adalah sumber metadata Arm Roll utama:
 
-Halaman public tetap hanya menampilkan peta. Admin membuka URL langsung:
+- **Vercel Admin** mengubah kode, nama, lokasi, Camera ID, dan status aktif.
+- **Flask lokal** mengambil metadata tersebut dan mengirim status AI terbaru.
+- **Peta public** hanya membaca marker aktif dan status aman untuk public.
 
-```text
-https://NAMA_PROJECT.vercel.app/login.html
-```
+Jika PC TPS atau koneksi CCTV mati, website tetap bisa dibuka tetapi akan menampilkan status terakhir yang tersimpan di Supabase.
 
-Setelah login, admin diarahkan ke:
+## Keamanan
 
-```text
-https://NAMA_PROJECT.vercel.app/admin.html
-```
+- Jangan commit file `.env`.
+- Jangan masukkan `SUPABASE_SECRET_KEY` ke Vercel, browser, atau repository ini.
+- Vercel hanya memakai `SUPABASE_PUBLISHABLE_KEY`.
+- Putar/revoke key Supabase jika pernah terekspos.
+- Jangan masukkan password CCTV, URL RTSP, database lokal, weights model, atau rekaman ke repository public.
 
-Admin online dapat menambah, mengubah lokasi lewat Leaflet map picker, mengubah
-Camera ID, mengaktifkan/nonaktifkan, dan menghapus Arm Roll. Form tidak
-menyediakan perubahan status `FULL`/`NOT_FULL`; status tetap datang dari Flask
-lokal dan AI.
+## Batasan Saat Ini
 
-Sebelum memakai admin online, jalankan `supabase/admin_schema.sql` di Supabase
-SQL Editor. Lalu pada Supabase Dashboard buka **Authentication → Users** dan
-buat satu user admin dengan email/password. Setelah itu, di Authentication
-settings nonaktifkan public signups bila pilihan tersebut tersedia.
+- Peta public tidak menampilkan live CCTV.
+- Satu perangkat CCTV/AI lokal aktif saat ini menggunakan `camera-01`.
+- Multi-camera dan multi-inference belum diimplementasikan.
+- Data AI terbaru membutuhkan perangkat lokal TPS dan koneksi internet aktif.
 
-Di Supabase Authentication → URL Configuration, masukkan URL Vercel berikut:
+---
 
-```text
-https://NAMA_PROJECT.vercel.app
-```
-
-Tambahkan juga redirect URL:
-
-```text
-https://NAMA_PROJECT.vercel.app/login.html
-```
-
-Jangan membuat user admin, password, atau service secret di source code/GitHub.
-
-## Sinkronisasi dengan Flask Lokal
-
-Supabase adalah sumber metadata utama. Vercel menyimpan nama, koordinat,
-Camera ID, dan aktif/nonaktif. Flask lokal menarik metadata itu setiap 10 detik
-lalu hanya mengirim status AI dan confidence kembali ke Supabase. Jika PC TPS
-mati, admin online dan peta tetap tersedia; status AI yang terlihat adalah
-pembaruan terakhir.
+<div align="center">
+  Dibangun untuk monitoring kondisi Arm Roll berbasis peta dan computer vision.
+</div>
