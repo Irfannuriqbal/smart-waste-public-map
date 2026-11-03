@@ -81,6 +81,8 @@ tr:hover { background: #f8fafc; }
 .active-field input { min-height: 0; width: 16px; height: 16px; accent-color: var(--primary); }
 .picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 20px 22px 10px; color: var(--muted); font-size: 12px; }
 .picker-heading strong { color: var(--text); }
+.gps-tools { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.gps-tools button { min-height: 34px; font-size: 12px; padding: 7px 10px; white-space: nowrap; }
 #admin-map { min-height: 380px; margin: 0 22px; border: 1px solid var(--border); border-radius: 3px; background: #dfe8ee; }
 .admin-note { margin: 16px 22px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin: 20px 22px 0; padding-top: 18px; border-top: 1px solid var(--border); }
@@ -97,6 +99,7 @@ button.secondary:hover { border-color: var(--primary); background: var(--surface
   .form-grid { grid-template-columns: 1fr; padding: 16px 16px 0; }
   .active-field { grid-column: auto; }
   .picker-heading { align-items: flex-start; flex-direction: column; margin: 16px 16px 10px; }
+  .gps-tools { align-items: flex-start; flex-direction: column; }
   #admin-map { min-height: 320px; margin: 0 16px; }
   .admin-note, .form-actions { margin-left: 16px; margin-right: 16px; }
   .section-title { align-items: flex-start; flex-direction: column; }

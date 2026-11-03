@@ -51,7 +51,13 @@
           <label>Latitude<input id="latitude" type="number" step="any" min="-90" max="90" required></label>
           <label>Longitude<input id="longitude" type="number" step="any" min="-180" max="180" required></label>
         </div>
-        <div class="picker-heading"><span>Klik peta untuk memilih lokasi</span><strong id="picker-status">Pilih titik lokasi</strong></div>
+        <div class="picker-heading">
+          <span>Klik peta untuk memilih lokasi</span>
+          <div class="gps-tools">
+            <button id="use-my-location" class="secondary" type="button">📍 Gunakan Lokasi Saya</button>
+            <strong id="picker-status">Pilih titik lokasi</strong>
+          </div>
+        </div>
         <div id="admin-map"></div>
         <p class="admin-note">Status FULL, NOT_FULL, NO_DETECTION, dan OFFLINE berasal dari AI lokal. Form ini hanya mengubah metadata lokasi/perangkat.</p>
         <div class="form-actions"><button class="secondary" id="cancel-form" type="button">Batal</button><button type="submit">Simpan Arm Roll</button></div>

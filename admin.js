@@ -13,6 +13,8 @@ const rowsElement = document.getElementById("arm-roll-rows")
 const formCard = document.getElementById("arm-roll-form-card")
 const form = document.getElementById("arm-roll-form")
 const message = document.getElementById("admin-message")
+const useMyLocationButton = document.getElementById("use-my-location")
+const pickerStatus = document.getElementById("picker-status")
 const fields = {
   originalCode: document.getElementById("original-code"),
   code: document.getElementById("arm-roll-code"),
@@ -33,7 +35,7 @@ function setPickerLocation(latitude, longitude, moveMap = false) {
   fields.longitude.value = Number(longitude).toFixed(6)
   if (!pickerMarker) pickerMarker = L.marker([latitude, longitude]).addTo(map)
   else pickerMarker.setLatLng([latitude, longitude])
-  document.getElementById("picker-status").textContent = `${Number(latitude).toFixed(6)}, ${Number(longitude).toFixed(6)}`
+  pickerStatus.textContent = `${Number(latitude).toFixed(6)}, ${Number(longitude).toFixed(6)}`
   if (moveMap) map.setView([latitude, longitude], 16)
 }
 
@@ -50,7 +52,7 @@ function showForm(armRoll = null) {
   else {
     fields.latitude.value = ""
     fields.longitude.value = ""
-    document.getElementById("picker-status").textContent = "Pilih titik lokasi"
+    pickerStatus.textContent = "Pilih titik lokasi"
     if (pickerMarker) {
       map.removeLayer(pickerMarker)
       pickerMarker = null
@@ -142,7 +144,47 @@ async function removeArmRoll(armRoll) {
   await loadArmRolls()
 }
 
-map.on("click", (event) => setPickerLocation(event.latlng.lat, event.latlng.lng))
+map.on("click", (event) => {
+  setPickerLocation(event.latlng.lat, event.latlng.lng)
+  pickerStatus.textContent = "Lokasi dipilih dari peta."
+})
+
+function geolocationErrorMessage(error) {
+  const messages = {
+    1: "Izin lokasi ditolak. Izinkan lokasi di browser lalu coba lagi.",
+    2: "Lokasi perangkat tidak tersedia. Periksa GPS atau koneksi perangkat.",
+    3: "Pencarian lokasi terlalu lama. Coba lagi di area dengan sinyal lebih baik."
+  }
+  return messages[error.code] || "Lokasi tidak dapat ditemukan. Coba lagi."
+}
+
+useMyLocationButton.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    pickerStatus.textContent = "Browser ini tidak mendukung geolocation."
+    return
+  }
+
+  useMyLocationButton.disabled = true
+  pickerStatus.textContent = "Mencari lokasi..."
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude, accuracy } = position.coords
+      setPickerLocation(latitude, longitude, true)
+      map.setView([latitude, longitude], 17)
+      pickerStatus.textContent = `Lokasi berhasil ditemukan. Akurasi ±${Math.round(accuracy)} meter`
+      useMyLocationButton.disabled = false
+    },
+    (error) => {
+      pickerStatus.textContent = geolocationErrorMessage(error)
+      useMyLocationButton.disabled = false
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  )
+})
 
 document.getElementById("new-arm-roll").addEventListener("click", () => showForm())
 document.getElementById("close-form").addEventListener("click", hideForm)
