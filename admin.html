@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kelola Arm Roll</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header-content">
+      <div class="brand">
+        <img src="assets/betric.webp" alt="Logo Betric">
+        <div><p>ADMINISTRASI LOKASI</p><h1>Kelola Arm Roll</h1></div>
+      </div>
+      <nav>
+        <a href="/">Peta Public</a>
+        <button id="logout" type="button">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-layout">
+    <section class="admin-card" aria-labelledby="admin-list-title">
+      <div class="section-title">
+        <div><p>DAFTAR LOKASI</p><h2 id="admin-list-title">Arm Roll Terdaftar</h2></div>
+        <button id="new-arm-roll" type="button">+ Tambah Arm Roll</button>
+      </div>
+      <p id="admin-message" class="form-message" role="status"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Nama</th><th>Camera ID</th><th>Koordinat</th><th>Status AI</th><th>Aktif</th><th>Aksi</th></tr></thead>
+          <tbody id="arm-roll-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="arm-roll-form-card" class="admin-card form-card" hidden>
+      <div class="section-title">
+        <div><p>DATA LOKASI</p><h2 id="form-title">Tambah Arm Roll</h2></div>
+        <button id="close-form" class="secondary" type="button">Tutup</button>
+      </div>
+      <form id="arm-roll-form">
+        <input id="original-code" type="hidden">
+        <div class="form-grid">
+          <label>ID Arm Roll<input id="arm-roll-code" required maxlength="80" placeholder="arm-roll-05"></label>
+          <label>Nama / Lokasi<input id="arm-roll-name" required maxlength="160" placeholder="Arm Roll TPS ..."></label>
+          <label>Camera ID<input id="camera-id" maxlength="80" placeholder="camera-01 atau kosong"></label>
+          <label class="active-field"><input id="is-active" type="checkbox" checked> Aktif di peta public</label>
+          <label>Latitude<input id="latitude" type="number" step="any" min="-90" max="90" required></label>
+          <label>Longitude<input id="longitude" type="number" step="any" min="-180" max="180" required></label>
+        </div>
+        <div class="picker-heading"><span>Klik peta untuk memilih lokasi</span><strong id="picker-status">Pilih titik lokasi</strong></div>
+        <div id="admin-map"></div>
+        <p class="admin-note">Status FULL, NOT_FULL, NO_DETECTION, dan OFFLINE berasal dari AI lokal. Form ini hanya mengubah metadata lokasi/perangkat.</p>
+        <div class="form-actions"><button class="secondary" id="cancel-form" type="button">Batal</button><button type="submit">Simpan Arm Roll</button></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" referrerpolicy="no-referrer"></script>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

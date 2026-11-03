@@ -19,6 +19,8 @@ body { margin: 0; }
 .brand p, .panel-heading p { margin: 0 0 5px; color: var(--primary); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
 h1, h2 { margin: 0; } h1 { font-size: clamp(24px, 3vw, 34px); } h2 { font-size: 20px; }
 .updated { display: flex; flex-direction: column; align-items: end; gap: 5px; }
+.admin-link { margin-left: auto; border: 1px solid var(--primary); border-radius: 3px; color: var(--primary); font-size: 13px; font-weight: 700; padding: 9px 12px; text-decoration: none; }
+.admin-link:hover { background: var(--primary); color: #fff; }
 .updated span, .panel-heading > span { color: var(--muted); font-size: 12px; }
 .updated strong { font-size: 13px; }
 
@@ -41,9 +43,61 @@ h1, h2 { margin: 0; } h1 { font-size: clamp(24px, 3vw, 34px); } h2 { font-size: 
 .popup span { color: #607087; }
 .popup strong { text-align: right; }
 
+.login-shell { display: grid; min-height: 100vh; place-items: center; padding: 24px; }
+.login-card { width: min(100%, 410px); padding: 30px; border: 1px solid var(--border); border-top: 3px solid var(--primary); border-radius: 4px; background: var(--surface); text-align: center; }
+.login-card > img { width: 112px; height: 72px; margin-bottom: 18px; object-fit: contain; background: #000; }
+.login-card > p { margin: 0 0 7px; color: var(--primary); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.login-card > span { display: block; margin: 10px 0 22px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.login-card > a { display: inline-block; margin-top: 18px; color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; }
+.login-card > a:hover { text-decoration: underline; }
+.login-card form { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+.login-card label, .form-grid label { display: flex; flex-direction: column; gap: 7px; font-size: 13px; font-weight: 700; }
+.login-card input, .form-grid input { min-height: 40px; border: 1px solid var(--border); border-radius: 3px; color: var(--text); font: inherit; font-weight: 400; padding: 8px 10px; }
+.login-card input:focus, .form-grid input:focus { border-color: var(--primary); outline: 3px solid rgba(29, 95, 139, .16); }
+.login-card button, .admin-header button, .section-title button, .form-actions button { min-height: 38px; border: 0; border-radius: 3px; background: var(--primary); color: #fff; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; padding: 9px 14px; }
+.login-card button:hover, .admin-header button:hover, .section-title button:hover, .form-actions button:hover { background: #164a6c; }
+.form-message { min-height: 20px; color: var(--muted); font-size: 13px; }
+.form-message.error { color: #ad3b4b; }
+
+.admin-header { border-bottom: 3px solid var(--primary); background: var(--surface); }
+.admin-header-content { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 98px; }
+.admin-header nav { display: flex; align-items: center; gap: 10px; }
+.admin-header nav a { color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; }
+.admin-layout { display: grid; gap: 20px; padding-top: 28px; padding-bottom: 48px; }
+.admin-card { overflow: hidden; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); }
+.section-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+.section-title p { margin: 0 0 5px; color: var(--primary); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 13px 14px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+th { background: #f8fafc; color: var(--muted); font-size: 11px; letter-spacing: .4px; text-transform: uppercase; }
+tr:hover { background: #f8fafc; }
+.row-actions { display: flex; gap: 8px; }
+.table-button { min-height: auto; border: 0; background: transparent; color: var(--primary); cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 2px 0; }
+.table-button.danger { color: #ad3b4b; }
+.form-card { padding-bottom: 22px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 20px 22px 0; }
+.active-field { flex-direction: row !important; align-items: center; grid-column: span 2; min-height: 36px; }
+.active-field input { min-height: 0; width: 16px; height: 16px; accent-color: var(--primary); }
+.picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 20px 22px 10px; color: var(--muted); font-size: 12px; }
+.picker-heading strong { color: var(--text); }
+#admin-map { min-height: 380px; margin: 0 22px; border: 1px solid var(--border); border-radius: 3px; background: #dfe8ee; }
+.admin-note { margin: 16px 22px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin: 20px 22px 0; padding-top: 18px; border-top: 1px solid var(--border); }
+button.secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+button.secondary:hover { border-color: var(--primary); background: var(--surface); color: var(--primary); }
+
 @media (max-width: 680px) {
   .header-content, .panel-heading { align-items: flex-start; flex-direction: column; padding-top: 18px; padding-bottom: 18px; }
   .updated { align-items: flex-start; }
+  .admin-link { margin-left: 0; }
   .panel-heading > span { text-align: left; }
   #arm-roll-map { min-height: 440px; }
+  .admin-header-content { align-items: flex-start; flex-direction: column; padding-top: 18px; padding-bottom: 18px; }
+  .form-grid { grid-template-columns: 1fr; padding: 16px 16px 0; }
+  .active-field { grid-column: auto; }
+  .picker-heading { align-items: flex-start; flex-direction: column; margin: 16px 16px 10px; }
+  #admin-map { min-height: 320px; margin: 0 16px; }
+  .admin-note, .form-actions { margin-left: 16px; margin-right: 16px; }
+  .section-title { align-items: flex-start; flex-direction: column; }
 }

@@ -12,7 +12,7 @@ export default async function handler(_request, response) {
 
   try {
     const upstream = await fetch(
-      `${supabaseUrl.replace(/\/$/, "")}/rest/v1/arm_roll_public?is_active=eq.true&select=arm_roll_code,name,latitude,longitude,status,updated_at&order=arm_roll_code.asc`,
+      `${supabaseUrl.replace(/\/$/, "")}/rest/v1/arm_roll_public?select=arm_roll_code,name,latitude,longitude,status,updated_at&order=arm_roll_code.asc`,
       {
         headers: {
           apikey: supabaseAnonKey,

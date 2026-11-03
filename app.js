@@ -1,4 +1,6 @@
 const BANDUNG_CENTER = [-6.914744, 107.609810]
+import { supabase, adminLoginUrl } from "./supabase-client.js"
+
 const map = L.map("arm-roll-map", { scrollWheelZoom: true }).setView(BANDUNG_CENTER, 13)
 const markers = new Map()
 let fittedBounds = false
@@ -92,6 +94,20 @@ async function refreshArmRolls() {
   }
 }
 
+async function updateAdminLink() {
+  const { data: { session } } = await supabase.auth.getSession()
+  const header = document.querySelector(".header-content")
+  const existing = document.getElementById("admin-link")
+  if (existing) existing.remove()
+  const link = document.createElement("a")
+  link.id = "admin-link"
+  link.className = "admin-link"
+  link.href = session ? "/admin.html" : adminLoginUrl()
+  link.textContent = session ? "Kelola Arm Roll" : ""
+  if (session) header.append(link)
+}
+
 refreshArmRolls()
+updateAdminLink()
 setInterval(refreshArmRolls, 15000)
 window.addEventListener("load", () => map.invalidateSize())

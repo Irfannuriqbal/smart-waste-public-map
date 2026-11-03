@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-card" aria-labelledby="login-title">
+      <img src="assets/betric.webp" alt="Logo Betric">
+      <p>AKSES ADMIN</p>
+      <h1 id="login-title">Login Admin</h1>
+      <span>Kelola lokasi Arm Roll dari website online.</span>
+      <form id="login-form">
+        <label>Email admin<input id="email" type="email" required autocomplete="email"></label>
+        <label>Password<input id="password" type="password" required autocomplete="current-password"></label>
+        <button type="submit">Login</button>
+      </form>
+      <p id="login-message" class="form-message" role="alert"></p>
+      <a href="/">Kembali ke peta public</a>
+    </section>
+  </main>
+  <script type="module">
+    import { supabase } from "./supabase-client.js"
+
+    const form = document.getElementById("login-form")
+    const message = document.getElementById("login-message")
+    const next = new URLSearchParams(location.search).get("next") || "/admin.html"
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault()
+      message.textContent = "Memproses login..."
+      const { error } = await supabase.auth.signInWithPassword({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+      if (error) {
+        message.textContent = "Email atau password tidak valid."
+        return
+      }
+      window.location.replace(next.startsWith("/") ? next : "/admin.html")
+    })
+  </script>
+</body>
+</html>

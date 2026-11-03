@@ -43,8 +43,10 @@ file `.env` lokal di PC TPS, karena key tersebut dapat mengubah data Supabase.
 4. Pada konfigurasi project, set **Root Directory** menjadi:
 
 ```text
-public-web
+./
 ```
+
+Repository ini sudah berisi langsung file website peta pada root.
 
 5. Tambahkan dua environment variable di atas untuk Production, Preview, dan
    Development.
@@ -58,3 +60,49 @@ https://smart-waste-monitoring.vercel.app
 
 Website membaca indikator Arm Roll dari Supabase. Status berubah ketika Flask
 lokal di PC TPS hidup dan berhasil melakukan sinkronisasi Supabase.
+
+## Login dan Kelola Arm Roll Online
+
+Halaman public tetap hanya menampilkan peta. Admin membuka URL langsung:
+
+```text
+https://NAMA_PROJECT.vercel.app/login.html
+```
+
+Setelah login, admin diarahkan ke:
+
+```text
+https://NAMA_PROJECT.vercel.app/admin.html
+```
+
+Admin online dapat menambah, mengubah lokasi lewat Leaflet map picker, mengubah
+Camera ID, mengaktifkan/nonaktifkan, dan menghapus Arm Roll. Form tidak
+menyediakan perubahan status `FULL`/`NOT_FULL`; status tetap datang dari Flask
+lokal dan AI.
+
+Sebelum memakai admin online, jalankan `supabase/admin_schema.sql` di Supabase
+SQL Editor. Lalu pada Supabase Dashboard buka **Authentication → Users** dan
+buat satu user admin dengan email/password. Setelah itu, di Authentication
+settings nonaktifkan public signups bila pilihan tersebut tersedia.
+
+Di Supabase Authentication → URL Configuration, masukkan URL Vercel berikut:
+
+```text
+https://NAMA_PROJECT.vercel.app
+```
+
+Tambahkan juga redirect URL:
+
+```text
+https://NAMA_PROJECT.vercel.app/login.html
+```
+
+Jangan membuat user admin, password, atau service secret di source code/GitHub.
+
+## Sinkronisasi dengan Flask Lokal
+
+Supabase adalah sumber metadata utama. Vercel menyimpan nama, koordinat,
+Camera ID, dan aktif/nonaktif. Flask lokal menarik metadata itu setiap 10 detik
+lalu hanya mengirim status AI dan confidence kembali ke Supabase. Jika PC TPS
+mati, admin online dan peta tetap tersedia; status AI yang terlihat adalah
+pembaruan terakhir.
